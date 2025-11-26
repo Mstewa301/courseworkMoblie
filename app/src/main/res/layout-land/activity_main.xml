@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#FAFAFA"
+    android:padding="12dp">
+
+    <!-- LEFT PANEL: title, button, info, top 3, search -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingEnd="8dp">
+
+        <!-- App title bar -->
+        <TextView
+            android:id="@+id/salutation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="FX Currency Rates"
+            android:textSize="22sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:padding="14dp"
+            android:background="#1565C0"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Load data button -->
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Refresh exchange rates"
+            android:textAllCaps="false"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Info text -->
+        <TextView
+            android:id="@+id/acknowledgement"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Live FX Currency Exchange data (GBP base)"
+            android:textSize="16sp"
+            android:textColor="#444444"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Raw data (debug) -->
+        <TextView
+            android:id="@+id/rawDataDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#666666"
+            android:text="Raw RSS data will be shown here for debugging"
+            android:layout_marginBottom="10dp" />
+
+        <!-- TOP 3 MAJOR CURRENCIES PANEL -->
+        <LinearLayout
+            android:id="@+id/top3Panel"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:background="@drawable/top3_background"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:id="@+id/top3Header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Top 3 major currencies (per 1 GBP)"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="#222222"
+                android:layout_marginBottom="6dp" />
+
+            <!-- USD row -->
+            <LinearLayout
+                android:id="@+id/usdRow"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="USD:"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#222222"
+                    android:paddingEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/usdValueText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textSize="16sp"
+                    android:textColor="#222222" />
+            </LinearLayout>
+
+            <!-- EUR row -->
+            <LinearLayout
+                android:id="@+id/eurRow"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="EUR:"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#222222"
+                    android:paddingEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/eurValueText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textSize="16sp"
+                    android:textColor="#222222" />
+            </LinearLayout>
+
+            <!-- JPY row -->
+            <LinearLayout
+                android:id="@+id/jpyRow"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:clickable="true"
+                android:focusable="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="JPY:"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#222222"
+                    android:paddingEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/jpyValueText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="-"
+                    android:textSize="16sp"
+                    android:textColor="#222222" />
+            </LinearLayout>
+        </LinearLayout>
+        <!-- END TOP 3 PANEL -->
+
+        <!-- Search bar -->
+        <EditText
+            android:id="@+id/searchEditText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Search code, name, or country"
+            android:inputType="text"
+            android:padding="12dp"
+            android:textColor="#222222"
+            android:textSize="16sp"
+            android:background="@drawable/search_background"
+            android:layout_marginBottom="10dp" />
+
+    </LinearLayout>
+
+    <!-- RIGHT PANEL: big list -->
+    <ListView
+        android:id="@+id/currencyListView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.4"
+        android:dividerHeight="8dp"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>
