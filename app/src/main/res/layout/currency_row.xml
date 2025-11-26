@@ -22,7 +22,7 @@
             android:layout_height="32dp"
             android:layout_marginEnd="12dp"
             android:adjustViewBounds="true"
-            android:scaleType="CENTER_CROP" />
+            android:scaleType="centerCrop" />
 
         <!-- Currency code -->
         <TextView
