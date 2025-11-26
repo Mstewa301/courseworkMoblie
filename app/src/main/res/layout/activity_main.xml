@@ -10,7 +10,19 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- App title bar -->
+        <!-- ==== DEBUG: Raw XML output at TOP ==== -->
+        <TextView
+            android:id="@+id/rawDataDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Raw RSS data will be shown here for debugging"
+            android:textSize="12sp"
+            android:textColor="#444444"
+            android:padding="8dp"
+            android:background="#EEEEEE"
+            android:layout_marginBottom="12dp" />
+
+        <!-- ==== Title bar ==== -->
         <TextView
             android:id="@+id/salutation"
             android:layout_width="match_parent"
@@ -24,7 +36,7 @@
             android:background="#1565C0"
             android:layout_marginBottom="12dp" />
 
-        <!-- Load data button -->
+        <!-- ==== Refresh button ==== -->
         <Button
             android:id="@+id/startButton"
             android:layout_width="match_parent"
@@ -33,7 +45,7 @@
             android:textAllCaps="false"
             android:layout_marginBottom="8dp" />
 
-        <!-- Small subheading / info text -->
+        <!-- ==== Subheading / info ==== -->
         <TextView
             android:id="@+id/acknowledgement"
             android:layout_width="match_parent"
@@ -41,19 +53,18 @@
             android:text="Live FX Currency Exchange data (GBP base)"
             android:textSize="16sp"
             android:textColor="#444444"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="4dp" />
 
-        <!-- Raw debug data (can be hidden later if you want) -->
+        <!-- Small hint text under subheading -->
         <TextView
-            android:id="@+id/rawDataDisplay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="13sp"
-            android:textColor="#666666"
-            android:text="Raw RSS data will be shown here for debugging"
+            android:text="Raw RSS data will be shown in the debug box above"
+            android:textSize="12sp"
+            android:textColor="#888888"
             android:layout_marginBottom="10dp" />
 
-        <!--  ⭐ TOP 3 MAJOR CURRENCIES PANEL  ⭐ -->
+        <!-- ==== TOP 3 PANEL ==== -->
         <LinearLayout
             android:id="@+id/top3Panel"
             android:orientation="vertical"
@@ -91,7 +102,7 @@
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="#222222"
-                    android:paddingEnd="8dp"/>
+                    android:paddingEnd="8dp" />
 
                 <TextView
                     android:id="@+id/usdValueText"
@@ -99,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:text="-"
                     android:textSize="16sp"
-                    android:textColor="#222222"/>
+                    android:textColor="#222222" />
             </LinearLayout>
 
             <!-- EUR row -->
@@ -120,7 +131,7 @@
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="#222222"
-                    android:paddingEnd="8dp"/>
+                    android:paddingEnd="8dp" />
 
                 <TextView
                     android:id="@+id/eurValueText"
@@ -128,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:text="-"
                     android:textSize="16sp"
-                    android:textColor="#222222"/>
+                    android:textColor="#222222" />
             </LinearLayout>
 
             <!-- JPY row -->
@@ -149,7 +160,7 @@
                     android:textStyle="bold"
                     android:textSize="16sp"
                     android:textColor="#222222"
-                    android:paddingEnd="8dp"/>
+                    android:paddingEnd="8dp" />
 
                 <TextView
                     android:id="@+id/jpyValueText"
@@ -157,12 +168,12 @@
                     android:layout_height="wrap_content"
                     android:text="-"
                     android:textSize="16sp"
-                    android:textColor="#222222"/>
+                    android:textColor="#222222" />
             </LinearLayout>
         </LinearLayout>
-        <!--  ⭐ END TOP 3 PANEL  ⭐ -->
+        <!-- ==== END TOP 3 PANEL ==== -->
 
-        <!-- Search bar -->
+        <!-- ==== Search bar ==== -->
         <EditText
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
@@ -175,7 +186,7 @@
             android:background="@drawable/search_background"
             android:layout_marginBottom="10dp" />
 
-        <!-- Currency list -->
+        <!-- ==== Currency list ==== -->
         <ListView
             android:id="@+id/currencyListView"
             android:layout_width="match_parent"

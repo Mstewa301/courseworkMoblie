@@ -43,11 +43,11 @@ public class CurrencyAdapter extends ArrayAdapter<CurrencyThing> {
     }
 
     private int getColourForRate(double rate) {
-        if (rate < 0.5) {
+        if (rate < 1.5) {
             return ContextCompat.getColor(getContext(), R.color.rate_very_weak);
-        } else if (rate < 1.0) {
+        } else if (rate < 5) {
             return ContextCompat.getColor(getContext(), R.color.rate_weak);
-        } else if (rate < 1.5) {
+        } else if (rate < 50) {
             return ContextCompat.getColor(getContext(), R.color.rate_strong);
         } else {
             return ContextCompat.getColor(getContext(), R.color.rate_very_strong);

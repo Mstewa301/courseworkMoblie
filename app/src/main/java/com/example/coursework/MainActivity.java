@@ -174,6 +174,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     }
     @Override
     public void onClick(View v) {
+        // Debug: prove the button click is firing
+        rawDataDisplay.setText("BUTTON PRESSED");
         startProgress();
     }
 
@@ -191,6 +193,10 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
         @Override
         public void run() {
+
+            // DEBUG: confirm thread runs
+            MainActivity.this.runOnUiThread(() ->
+                    rawDataDisplay.setText("THREAD STARTED"));
             URL aurl;
             URLConnection yc;
             BufferedReader in;
@@ -208,10 +214,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 }
                 in.close();
             } catch (IOException e) {
-                Log.e("MyTask", "IO Exception: " + e);
+                result = "ERROR:\n" + e.toString();
             }
-
-            if (result.isEmpty()) return;
 
             // Clean leading/trailing garbage
             int i = result.indexOf("<?");
@@ -281,10 +285,19 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
             // Update UI
             MainActivity.this.runOnUiThread(() -> {
-                // copy full list into displayItems (initial no-filter state)
+                // 1) ALWAYS show whatever we got in 'result'
+
+                // 2) Show how many items were parsed (for debugging)
+                Toast.makeText(MainActivity.this,
+                        "Parsed items: " + allItems.size(),
+                        Toast.LENGTH_LONG).show();
+
+                // 3) Update the list
                 displayItems.clear();
                 displayItems.addAll(allItems);
                 adapter.notifyDataSetChanged();
+
+                // 4) Update the top 3 currencies panel
                 updateTopThreePanel();
             });
         }

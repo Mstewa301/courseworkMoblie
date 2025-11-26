@@ -2,7 +2,7 @@ package com.example.coursework;
 
 public class CurrencyThing {
 
-    // Raw RSS fields (already used in your parser)
+    // Raw RSS fields
     private String title;
     private String link;
     private String guid;
@@ -10,11 +10,10 @@ public class CurrencyThing {
     private String description;
     private String category;
 
-    // ✅ Derived fields we actually care about for the app
-    // (these are what we’ll use later in lists, search, converter, etc.)
+    // Derived fields
     private String currencyCode;   // e.g. "USD"
     private String currencyName;   // e.g. "US Dollar"
-    private String countryName;    // e.g. "United States" / "American" etc.
+    private String countryName;    // e.g. "United States"
     private double rateToGbp;      // how many of this currency for 1 GBP
 
     // ==== Getters for raw fields ====
@@ -26,29 +25,12 @@ public class CurrencyThing {
     public String getCategory() { return category; }
 
     // ==== Setters for raw fields ====
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setLink(String link) {
-        this.link = link;
-    }
-
-    public void setGuid(String guid) {
-        this.guid = guid;
-    }
-
-    public void setPubDate(String pubDate) {
-        this.pubDate = pubDate;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
+    public void setTitle(String title) { this.title = title; }
+    public void setLink(String link) { this.link = link; }
+    public void setGuid(String guid) { this.guid = guid; }
+    public void setPubDate(String pubDate) { this.pubDate = pubDate; }
+    public void setDescription(String description) { this.description = description; }
+    public void setCategory(String category) { this.category = category; }
 
     // ==== Getters for derived fields ====
     public String getCurrencyCode() { return currencyCode; }
@@ -57,63 +39,74 @@ public class CurrencyThing {
     public double getRateToGbp() { return rateToGbp; }
 
     /**
-     * Call this AFTER all raw fields have been set for one <item>.
-     * It pulls out code, name, country and numeric rate from title/description/category.
+     * Call this AFTER all raw RSS fields have been set for one <item>.
+     * It extracts: currency code, name, country and numeric rate.
+     *
+     * The feed items look roughly like:
+     *
+     *   <title>British Pound Sterling (GBP)/Japan Yen(JPY)</title>
+     *   <description>1 British Pound Sterling = 200.0 Japanese Yen</description>
+     *   <category>Japan Yen</category>
      */
     public void deriveFieldsFromRaw() {
+
         if (title == null || description == null) {
             return;
         }
 
-        // --- 1) Currency code ---
-        // Best source is usually <category>, but if missing, try from title "GBP/XXX"
-        if (category != null && !category.trim().isEmpty()) {
-            currencyCode = category.trim();
-        } else {
-            // fallback: look for "GBP/XXX"
-            int slashIndex = title.indexOf("GBP/");
-            if (slashIndex != -1 && title.length() >= slashIndex + 7) {
-                currencyCode = title.substring(slashIndex + 4, slashIndex + 7).trim();
+        // ---------- 1) Extract currency code ----------
+        // Title: "British Pound Sterling(GBP)/Japan Yen(JPY)"
+        currencyCode = null;
+        int lastOpen = title.lastIndexOf('(');
+        int lastClose = title.lastIndexOf(')');
+        if (lastOpen != -1 && lastClose != -1 && lastClose > lastOpen) {
+            currencyCode = title.substring(lastOpen + 1, lastClose).trim();  // "JPY"
+        }
+        if (currencyCode == null || currencyCode.isEmpty()) {
+            currencyCode = "GBP"; // safe fallback
+        }
+
+        // ---------- 2) Extract currency / country name ----------
+        // We want the part after "/" and before the last "(".
+        // Example: "British Pound Sterling(GBP)/Japan Yen(JPY)"
+        String name = null;
+        int slash = title.indexOf('/');
+        if (slash != -1 && slash + 1 < title.length()) {
+            // right side: "Japan Yen(JPY)"
+            String right = title.substring(slash + 1).trim();
+            int open2 = right.lastIndexOf('(');
+            if (open2 != -1) {
+                name = right.substring(0, open2).trim();   // "Japan Yen"
+            } else {
+                name = right;
             }
         }
 
-        // --- 2) Currency name / country (from text in brackets in the title) ---
-        // Example: "GBP/USD (US Dollar)" -> "US Dollar"
-        String nameFromTitle = null;
-        int open = title.indexOf('(');
-        int close = title.indexOf(')');
-        if (open != -1 && close != -1 && close > open) {
-            nameFromTitle = title.substring(open + 1, close).trim();
-        }
-
-        currencyName = nameFromTitle != null ? nameFromTitle : "";
-        // For now we’ll just duplicate this into countryName – we can improve later
-        countryName = currencyName;
-
-        // --- 3) Numeric rate from description ---
-        // Typical description: "1 GBP = 1.2345 USD"
-        String desc = description.replace(",", "").trim();
-        int equalsIndex = desc.indexOf('=');
-        if (equalsIndex != -1 && desc.length() > equalsIndex + 1) {
-            String afterEquals = desc.substring(equalsIndex + 1).trim(); // "1.2345 USD"
-            String[] parts = afterEquals.split("\\s+");
-            if (parts.length > 0) {
-                try {
-                    rateToGbp = Double.parseDouble(parts[0]);
-                } catch (NumberFormatException e) {
-                    rateToGbp = 0.0;
-                }
+        // If we still didn't get a name, fall back to category or empty string
+        if (name == null || name.isEmpty()) {
+            if (category != null) {
+                name = category.trim();
+            } else {
+                name = "";
             }
         }
-    }
 
-    // ==== toString for debugging / temporary display ====
-    @Override
-    public String toString() {
-        // Show derived info first – this is what you’ll see in the TextView for now
-        return currencyCode + " - " + currencyName +
-                "\n1 GBP = " + rateToGbp + " " + currencyCode +
-                "\nDate: " + pubDate;
-    }
+        currencyName = name;
+        countryName = currencyName;  // so search() can match country/currency words
 
+        // ---------- 3) Rate from description ----------
+        // Example: "1 British Pound Sterling = 205.928 Japan Yen"
+        rateToGbp = 0.0;
+        try {
+            String clean = description.replace(",", "");
+            String[] split = clean.split("=");
+            if (split.length == 2) {
+                String right = split[1].trim();           // "205.928 Japan Yen"
+                String firstNum = right.split("\\s+")[0]; // "205.928"
+                rateToGbp = Double.parseDouble(firstNum);
+            }
+        } catch (Exception e) {
+            rateToGbp = 0.0;
+        }
+    }
 }
