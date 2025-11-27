@@ -56,15 +56,14 @@ public class CurrencyAdapter extends ArrayAdapter<CurrencyThing> {
 
     private int getFlagForCurrency(String code) {
         if (code == null || code.length() < 2) {
-            return R.drawable.gb; // fallback
+            return R.drawable.gb;
         }
 
-        // Map currency → country code (special cases first)
         String countryCode;
         switch (code.toUpperCase(Locale.ROOT)) {
             case "EUR":
                 countryCode = "eu";
-                break; // your EU flag
+                break;
             case "GBP":
                 countryCode = "gb";
                 break;
@@ -89,21 +88,17 @@ public class CurrencyAdapter extends ArrayAdapter<CurrencyThing> {
             case "CNY":
                 countryCode = "cn";
                 break;
-            // add any other weird ones here if needed
 
             default:
-                // Generic rule: use first 2 letters as country code
                 countryCode = code.substring(0, 2).toLowerCase(Locale.ROOT);
                 break;
         }
 
-        // Look up drawable by name (ad, ae, us, jp, etc.)
         int resId = getContext()
                 .getResources()
                 .getIdentifier(countryCode, "drawable", getContext().getPackageName());
 
         if (resId == 0) {
-            // If no matching drawable, use a safe default
             return R.drawable.gb;
         } else {
             return resId;

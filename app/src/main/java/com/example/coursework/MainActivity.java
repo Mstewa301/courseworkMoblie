@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Link UI components
         rawDataDisplay = findViewById(R.id.rawDataDisplay);
         startButton = findViewById(R.id.startButton);
         startButton.setOnClickListener(this);
@@ -119,11 +118,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         allItems = new ArrayList<>();
         displayItems = new ArrayList<>();
 
-        // Set up adapter using displayItems (this is what the ListView shows)
         adapter = new CurrencyAdapter(this, displayItems);
         currencyListView.setAdapter(adapter);
 
-        // Handle clicks on list items → open converter dialog
         currencyListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -132,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             }
         });
 
-        // Search behaviour – filter as user types
         searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -150,15 +146,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         refreshRunnable = new Runnable() {
             @Override
             public void run() {
-                startProgress(); // refresh now
-                refreshHandler.postDelayed(this, REFRESH_INTERVAL_MS); // schedule next
+                startProgress();
+                refreshHandler.postDelayed(this, REFRESH_INTERVAL_MS);
             }
         };
 
     }
     protected void onResume() {
         super.onResume();
-        // Start auto-refresh when activity becomes visible
         if (refreshHandler != null && refreshRunnable != null) {
             refreshHandler.postDelayed(refreshRunnable, REFRESH_INTERVAL_MS);
         }
@@ -167,14 +162,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
     @Override
     protected void onPause() {
         super.onPause();
-        // Stop auto-refresh when activity is no longer in foreground
         if (refreshHandler != null && refreshRunnable != null) {
             refreshHandler.removeCallbacks(refreshRunnable);
         }
     }
     @Override
     public void onClick(View v) {
-        // Debug: prove the button click is firing
         rawDataDisplay.setText("BUTTON PRESSED");
         startProgress();
     }
@@ -183,7 +176,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         new Thread(new Task(urlSource)).start();
     }
 
-    // Background thread to fetch RSS
     private class Task implements Runnable {
         private String url;
 
@@ -194,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         @Override
         public void run() {
 
-            // DEBUG: confirm thread runs
             MainActivity.this.runOnUiThread(() ->
                     rawDataDisplay.setText("THREAD STARTED"));
             URL aurl;
@@ -202,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             BufferedReader in;
             String inputLine;
 
-            result = ""; // reset
+            result = "";
 
             try {
                 aurl = new URL(url);
@@ -217,14 +208,12 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 result = "ERROR:\n" + e.toString();
             }
 
-            // Clean leading/trailing garbage
             int i = result.indexOf("<?");
             if (i >= 0) result = result.substring(i);
 
             i = result.indexOf("</rss>");
             if (i >= 0) result = result.substring(0, i + 6);
 
-            // PARSE XML
             try {
                 XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
                 factory.setNamespaceAware(true);
@@ -283,21 +272,15 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 Log.e("Parsing", "Error: " + e);
             }
 
-            // Update UI
             MainActivity.this.runOnUiThread(() -> {
-                // 1) ALWAYS show whatever we got in 'result'
-
-                // 2) Show how many items were parsed (for debugging)
                 Toast.makeText(MainActivity.this,
                         "Parsed items: " + allItems.size(),
                         Toast.LENGTH_LONG).show();
 
-                // 3) Update the list
                 displayItems.clear();
                 displayItems.addAll(allItems);
                 adapter.notifyDataSetChanged();
 
-                // 4) Update the top 3 currencies panel
                 updateTopThreePanel();
             });
         }
@@ -307,19 +290,16 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setTitle("Convert GBP ↔ " + currency.getCurrencyCode());
 
-        // Container to hold both input boxes vertically
         LinearLayout layout = new LinearLayout(MainActivity.this);
         layout.setOrientation(LinearLayout.VERTICAL);
         int padding = (int) (16 * getResources().getDisplayMetrics().density);
         layout.setPadding(padding, padding, padding, padding);
 
-        // Input for GBP amount
         final EditText gbpInput = new EditText(MainActivity.this);
         gbpInput.setHint("Amount in GBP");
         gbpInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         layout.addView(gbpInput);
 
-        // Input for foreign currency amount
         final EditText curInput = new EditText(MainActivity.this);
         curInput.setHint("Amount in " + currency.getCurrencyCode());
         curInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -331,9 +311,8 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             String gbpText = gbpInput.getText().toString().trim();
             String curText = curInput.getText().toString().trim();
 
-            double rate = currency.getRateToGbp();   // 1 GBP = rate * currency
+            double rate = currency.getRateToGbp();
 
-            // If user entered GBP, convert GBP -> currency
             if (!gbpText.isEmpty()) {
                 double gbpAmount;
                 try {
@@ -353,7 +332,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 return;
             }
 
-            // Else if user entered foreign currency, convert currency -> GBP
             if (!curText.isEmpty()) {
                 double curAmount;
                 try {
@@ -367,7 +345,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                     Toast.makeText(MainActivity.this, "Amount cannot be negative", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                // reverse conversion: GBP = foreign / rate
                 double gbpAmount = curAmount / rate;
                 String msg = String.format("%.2f %s = %.2f GBP",
                         curAmount, currency.getCurrencyCode(), gbpAmount);
@@ -375,7 +352,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
                 return;
             }
 
-            // Neither box filled
             Toast.makeText(MainActivity.this, "Enter an amount in one box", Toast.LENGTH_SHORT).show();
         });
 
@@ -393,7 +369,6 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         displayItems.clear();
 
         if (lower.isEmpty()) {
-            // show everything if search is empty
             displayItems.addAll(allItems);
         } else {
             for (CurrencyThing c : allItems) {
@@ -423,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
 
     private void updateTopThreePanel() {
         if (usdValueText == null || eurValueText == null || jpyValueText == null) {
-            return; // views not ready
+            return;
         }
         CurrencyThing usd = findCurrencyByCode("USD");
         CurrencyThing eur = findCurrencyByCode("EUR");

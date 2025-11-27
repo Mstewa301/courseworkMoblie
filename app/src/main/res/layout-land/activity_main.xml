@@ -6,7 +6,6 @@
     android:background="#FAFAFA"
     android:padding="12dp">
 
-    <!-- LEFT PANEL: title, button, info, top 3, search -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -14,7 +13,6 @@
         android:orientation="vertical"
         android:paddingEnd="8dp">
 
-        <!-- App title bar -->
         <TextView
             android:id="@+id/salutation"
             android:layout_width="match_parent"
@@ -28,7 +26,6 @@
             android:background="#1565C0"
             android:layout_marginBottom="12dp" />
 
-        <!-- Load data button -->
         <Button
             android:id="@+id/startButton"
             android:layout_width="match_parent"
@@ -37,7 +34,6 @@
             android:textAllCaps="false"
             android:layout_marginBottom="8dp" />
 
-        <!-- Info text -->
         <TextView
             android:id="@+id/acknowledgement"
             android:layout_width="match_parent"
@@ -47,7 +43,6 @@
             android:textColor="#444444"
             android:layout_marginBottom="8dp" />
 
-        <!-- Raw data (debug) -->
         <TextView
             android:id="@+id/rawDataDisplay"
             android:layout_width="match_parent"
@@ -57,7 +52,6 @@
             android:text="Raw RSS data will be shown here for debugging"
             android:layout_marginBottom="10dp" />
 
-        <!-- TOP 3 MAJOR CURRENCIES PANEL -->
         <LinearLayout
             android:id="@+id/top3Panel"
             android:orientation="vertical"
@@ -77,7 +71,6 @@
                 android:textColor="#222222"
                 android:layout_marginBottom="6dp" />
 
-            <!-- USD row -->
             <LinearLayout
                 android:id="@+id/usdRow"
                 android:orientation="horizontal"
@@ -106,7 +99,6 @@
                     android:textColor="#222222" />
             </LinearLayout>
 
-            <!-- EUR row -->
             <LinearLayout
                 android:id="@+id/eurRow"
                 android:orientation="horizontal"
@@ -135,7 +127,6 @@
                     android:textColor="#222222" />
             </LinearLayout>
 
-            <!-- JPY row -->
             <LinearLayout
                 android:id="@+id/jpyRow"
                 android:orientation="horizontal"
@@ -164,9 +155,7 @@
                     android:textColor="#222222" />
             </LinearLayout>
         </LinearLayout>
-        <!-- END TOP 3 PANEL -->
 
-        <!-- Search bar -->
         <EditText
             android:id="@+id/searchEditText"
             android:layout_width="match_parent"
@@ -181,7 +170,6 @@
 
     </LinearLayout>
 
-    <!-- RIGHT PANEL: big list -->
     <ListView
         android:id="@+id/currencyListView"
         android:layout_width="0dp"

@@ -3,13 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="rate_very_strong">#FF6B6B</color>
-
-    <!-- Weak = ORANGE -->
     <color name="rate_strong">#FFA552</color>
-
-    <!-- Strong = LIGHT GREEN -->
     <color name="rate_weak">#A8E6A3</color>
-
-    <!-- Very Strong = DARK GREEN -->
     <color name="rate_very_weak">#4CAF50</color>
 </resources>
